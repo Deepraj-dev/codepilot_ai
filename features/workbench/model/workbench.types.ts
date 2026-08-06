@@ -9,6 +9,12 @@ export type WorkbenchShellLabels = {
   statusbar?: string;
 };
 
+export type WorkbenchShellStyle = CSSProperties & {
+  "--workbench-sidebar-size"?: string;
+  "--workbench-assistant-size"?: string;
+  "--workbench-bottom-panel-size"?: string;
+};
+
 export type WorkbenchShellProps = {
   titlebar: ReactNode;
   activityRail: ReactNode;
@@ -17,7 +23,10 @@ export type WorkbenchShellProps = {
   sidebar?: ReactNode;
   assistant?: ReactNode;
   bottomPanel?: ReactNode;
+  sidebarCollapsed?: boolean;
+  assistantCollapsed?: boolean;
+  bottomPanelCollapsed?: boolean;
   labels?: WorkbenchShellLabels;
   className?: string;
-  style?: CSSProperties;
+  style?: WorkbenchShellStyle;
 };
