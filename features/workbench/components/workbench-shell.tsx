@@ -1,4 +1,7 @@
-import type { WorkbenchShellProps, WorkbenchShellStyle } from "../model/workbench.types";
+import type {
+  WorkbenchShellProps,
+  WorkbenchShellStyle,
+} from "../model/workbench.types";
 import styles from "./workbench-shell.module.css";
 
 const defaultLabels = {
@@ -60,7 +63,10 @@ export function WorkbenchShell({
       <header className={styles.titlebar}>{titlebar}</header>
 
       <div className={styles.workspace}>
-        <nav className={styles.activityRail} aria-label={regionLabels.activityRail}>
+        <nav
+          className={styles.activityRail}
+          aria-label={regionLabels.activityRail}
+        >
           {activityRail}
         </nav>
 
@@ -76,14 +82,20 @@ export function WorkbenchShell({
           </main>
 
           {bottomPanel ? (
-            <section className={styles.bottomPanel} aria-label={regionLabels.bottomPanel}>
+            <section
+              className={styles.bottomPanel}
+              aria-label={regionLabels.bottomPanel}
+            >
               {bottomPanel}
             </section>
           ) : null}
         </section>
 
         {assistant ? (
-          <aside className={styles.assistant} aria-label={regionLabels.assistant}>
+          <aside
+            className={styles.assistant}
+            aria-label={regionLabels.assistant}
+          >
             {assistant}
           </aside>
         ) : null}

@@ -1,10 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { PanelResizeHandle, WorkbenchShell, WorkspacePanel } from "@/features/workbench";
+import {
+  ActivityRail,
+  PanelResizeHandle,
+  WorkbenchShell,
+  WorkspacePanel,
+  workbenchActivityItems,
+  workbenchUtilityItems,
+  type ActivityRailItem,
+} from "@/features/workbench";
 import styles from "../page.module.css";
-
-const activityItems = ["◇", "⌕", "⑂", "▷", "▦"];
 
 function RegionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
   return (
@@ -22,6 +28,15 @@ export function WorkbenchPreview() {
   const [sidebarSize, setSidebarSize] = useState(224);
   const [assistantSize, setAssistantSize] = useState(330);
   const [bottomPanelSize, setBottomPanelSize] = useState(174);
+  const [activeActivity, setActiveActivity] = useState("explorer");
+
+  function handleActivitySelect(item: ActivityRailItem) {
+    if (item.kind === "action") return;
+
+    setActiveActivity(item.id);
+    if (item.id === "explorer") setSidebarCollapsed(false);
+    if (item.id === "agent") setAssistantCollapsed(false);
+  }
 
   return (
     <WorkbenchShell
@@ -51,21 +66,12 @@ export function WorkbenchPreview() {
         </div>
       }
       activityRail={
-        <div className={styles.activityContent}>
-          <div>
-            {activityItems.map((item, index) => (
-              <button
-                type="button"
-                className={index === 0 ? styles.activityActive : undefined}
-                aria-label={`Placeholder tool ${index + 1}`}
-                key={item}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <button type="button" aria-label="Placeholder settings">⚙</button>
-        </div>
+        <ActivityRail
+          items={workbenchActivityItems}
+          utilityItems={workbenchUtilityItems}
+          activeItemId={activeActivity}
+          onItemSelect={handleActivitySelect}
+        />
       }
       sidebar={
         <WorkspacePanel

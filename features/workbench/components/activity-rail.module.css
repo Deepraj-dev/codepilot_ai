@@ -1,0 +1,140 @@
+.rail {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--space-1) 0;
+  overflow: visible;
+}
+
+.primaryItems,
+.utilityItems {
+  display: flex;
+  flex-direction: column;
+}
+
+.utilityItems {
+  padding-top: var(--space-1);
+  border-top: var(--border-width) solid var(--border-subtle);
+}
+
+.item {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 2.625rem;
+  flex: 0 0 2.625rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--content-muted);
+}
+
+.item:hover,
+.item:focus-visible {
+  color: var(--content-secondary);
+}
+
+.item:focus-visible {
+  z-index: 2;
+  outline-offset: -4px;
+}
+
+.item:disabled {
+  color: var(--content-disabled);
+  opacity: 0.55;
+}
+
+.item[data-active="true"] {
+  color: var(--content-primary);
+}
+
+.activeIndicator {
+  position: absolute;
+  inset-block: var(--space-2);
+  left: 0;
+  width: 2px;
+  border-radius: 0 var(--shape-radius-xs) var(--shape-radius-xs) 0;
+  background: var(--accent-primary);
+  opacity: 0;
+  transform: scaleY(0.55);
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+}
+
+.item[data-active="true"] .activeIndicator {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.icon {
+  font-family: var(--font-family-mono);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.item[data-active="true"] .icon {
+  text-shadow: 0 0 0.75rem color-mix(in srgb, var(--accent-primary) 35%, transparent);
+}
+
+.badge {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  display: grid;
+  place-items: center;
+  min-width: 0.875rem;
+  height: 0.875rem;
+  padding: 0 0.1875rem;
+  border: 2px solid var(--surface-raised);
+  border-radius: var(--shape-radius-full);
+  background: var(--status-info);
+  color: var(--action-primary-content);
+  font-size: 0.5rem;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.tooltip {
+  position: absolute;
+  top: 50%;
+  left: calc(100% + var(--space-2));
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: max-content;
+  max-width: 15rem;
+  min-height: 1.75rem;
+  padding: var(--space-1) var(--space-2);
+  border: var(--border-width) solid var(--border-strong);
+  border-radius: var(--shape-radius-sm);
+  background: var(--surface-overlay);
+  color: var(--content-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+  line-height: var(--line-height-tight);
+  pointer-events: none;
+  opacity: 0;
+  box-shadow: var(--shadow-floating);
+  transform: translate(-0.25rem, -50%);
+  transition:
+    opacity var(--duration-fast) var(--ease-standard),
+    transform var(--duration-fast) var(--ease-standard);
+  white-space: nowrap;
+}
+
+.tooltip kbd {
+  color: var(--content-tertiary);
+  font-family: var(--font-family-sans);
+  font-size: var(--font-size-2xs);
+}
+
+.item:not(:disabled):hover .tooltip,
+.item:not(:disabled):focus-visible .tooltip {
+  opacity: 1;
+  transform: translate(0, -50%);
+}
