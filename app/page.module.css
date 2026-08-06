@@ -80,6 +80,23 @@
   box-shadow: 0 0 0.5rem color-mix(in srgb, var(--status-success) 50%, transparent);
 }
 
+.resetLayoutButton {
+  min-width: max-content;
+  height: var(--size-control-sm);
+  padding: 0 var(--space-2);
+  border: var(--border-width) solid var(--border-default);
+  border-radius: var(--shape-radius-sm);
+  background: transparent;
+  color: var(--content-tertiary);
+  font-size: var(--font-size-2xs);
+}
+
+.resetLayoutButton:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-hover);
+  color: var(--content-secondary);
+}
+
 .regionLabel {
   display: flex;
   flex-direction: column;
@@ -260,7 +277,8 @@
   }
 
   .brand strong,
-  .sessionStatus {
+  .sessionStatus,
+  .resetLayoutButton {
     display: none;
   }
 

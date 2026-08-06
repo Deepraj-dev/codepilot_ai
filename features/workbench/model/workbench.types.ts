@@ -1,5 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 
+export type WorkbenchPanelId = "sidebar" | "assistant" | "bottomPanel";
+
 export type WorkbenchShellLabels = {
   activityRail?: string;
   sidebar?: string;

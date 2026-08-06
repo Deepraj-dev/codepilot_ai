@@ -7,6 +7,7 @@ export const workbenchActivityItems = [
     icon: "◇",
     shortcut: "⇧⌘E",
     controls: "explorer-panel-content",
+    revealsPanel: "sidebar",
   },
   {
     id: "search",
@@ -39,6 +40,7 @@ export const workbenchActivityItems = [
     icon: "✦",
     shortcut: "⌘L",
     controls: "assistant-panel-content",
+    revealsPanel: "assistant",
   },
 ] as const satisfies readonly ActivityRailItem[];
 

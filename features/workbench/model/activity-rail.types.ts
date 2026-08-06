@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { WorkbenchPanelId } from "./workbench.types";
 
 export type ActivityRailItem = {
   id: string;
@@ -8,6 +9,7 @@ export type ActivityRailItem = {
   badge?: number | string;
   shortcut?: string;
   controls?: string;
+  revealsPanel?: WorkbenchPanelId;
   disabled?: boolean;
 };
 

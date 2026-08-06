@@ -1,14 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 import {
   ActivityRail,
+  WorkbenchStateHydrator,
   PanelResizeHandle,
   WorkbenchShell,
   WorkspacePanel,
+  WORKBENCH_PANEL_LIMITS,
+  useWorkbenchStore,
   workbenchActivityItems,
   workbenchUtilityItems,
-  type ActivityRailItem,
 } from "@/features/workbench";
 import styles from "../page.module.css";
 
@@ -22,24 +24,38 @@ function RegionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
 }
 
 export function WorkbenchPreview() {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [assistantCollapsed, setAssistantCollapsed] = useState(false);
-  const [bottomPanelCollapsed, setBottomPanelCollapsed] = useState(false);
-  const [sidebarSize, setSidebarSize] = useState(224);
-  const [assistantSize, setAssistantSize] = useState(330);
-  const [bottomPanelSize, setBottomPanelSize] = useState(174);
-  const [activeActivity, setActiveActivity] = useState("explorer");
-
-  function handleActivitySelect(item: ActivityRailItem) {
-    if (item.kind === "action") return;
-
-    setActiveActivity(item.id);
-    if (item.id === "explorer") setSidebarCollapsed(false);
-    if (item.id === "agent") setAssistantCollapsed(false);
-  }
+  const {
+    activeActivityId,
+    sidebarCollapsed,
+    assistantCollapsed,
+    bottomPanelCollapsed,
+    sidebarSize,
+    assistantSize,
+    bottomPanelSize,
+    activateActivity,
+    setPanelCollapsed,
+    setPanelSize,
+    resetLayout,
+  } = useWorkbenchStore(
+    useShallow((state) => ({
+      activeActivityId: state.activeActivityId,
+      sidebarCollapsed: state.sidebarCollapsed,
+      assistantCollapsed: state.assistantCollapsed,
+      bottomPanelCollapsed: state.bottomPanelCollapsed,
+      sidebarSize: state.sidebarSize,
+      assistantSize: state.assistantSize,
+      bottomPanelSize: state.bottomPanelSize,
+      activateActivity: state.activateActivity,
+      setPanelCollapsed: state.setPanelCollapsed,
+      setPanelSize: state.setPanelSize,
+      resetLayout: state.resetLayout,
+    })),
+  );
 
   return (
-    <WorkbenchShell
+    <>
+      <WorkbenchStateHydrator />
+      <WorkbenchShell
       sidebarCollapsed={sidebarCollapsed}
       assistantCollapsed={assistantCollapsed}
       bottomPanelCollapsed={bottomPanelCollapsed}
@@ -63,14 +79,17 @@ export function WorkbenchPreview() {
             <i />
             Workspace ready
           </div>
+          <button className={styles.resetLayoutButton} type="button" onClick={resetLayout}>
+            Reset layout
+          </button>
         </div>
       }
       activityRail={
         <ActivityRail
           items={workbenchActivityItems}
           utilityItems={workbenchUtilityItems}
-          activeItemId={activeActivity}
-          onItemSelect={handleActivitySelect}
+          activeItemId={activeActivityId}
+          onItemSelect={activateActivity}
         />
       }
       sidebar={
@@ -81,16 +100,16 @@ export function WorkbenchPreview() {
           collapsible
           collapsed={sidebarCollapsed}
           collapseDirection="start"
-          onCollapsedChange={setSidebarCollapsed}
+          onCollapsedChange={(collapsed) => setPanelCollapsed("sidebar", collapsed)}
           resizeHandle={
             <PanelResizeHandle
               value={sidebarSize}
-              min={176}
-              max={416}
+              min={WORKBENCH_PANEL_LIMITS.sidebar.min}
+              max={WORKBENCH_PANEL_LIMITS.sidebar.max}
               orientation="vertical"
               edge="right"
               label="Resize Explorer panel"
-              onResize={setSidebarSize}
+              onResize={(size) => setPanelSize("sidebar", size)}
             />
           }
         >
@@ -126,17 +145,17 @@ export function WorkbenchPreview() {
           collapsible
           collapsed={assistantCollapsed}
           collapseDirection="end"
-          onCollapsedChange={setAssistantCollapsed}
+          onCollapsedChange={(collapsed) => setPanelCollapsed("assistant", collapsed)}
           resizeHandle={
             <PanelResizeHandle
               value={assistantSize}
-              min={280}
-              max={672}
+              min={WORKBENCH_PANEL_LIMITS.assistant.min}
+              max={WORKBENCH_PANEL_LIMITS.assistant.max}
               orientation="vertical"
               edge="left"
               label="Resize CodePilot panel"
               inverted
-              onResize={setAssistantSize}
+              onResize={(size) => setPanelSize("assistant", size)}
             />
           }
         >
@@ -155,18 +174,18 @@ export function WorkbenchPreview() {
           collapsible
           collapsed={bottomPanelCollapsed}
           collapseDirection="bottom"
-          onCollapsedChange={setBottomPanelCollapsed}
+          onCollapsedChange={(collapsed) => setPanelCollapsed("bottomPanel", collapsed)}
           contentClassName={styles.terminalPanelContent}
           resizeHandle={
             <PanelResizeHandle
               value={bottomPanelSize}
-              min={96}
-              max={480}
+              min={WORKBENCH_PANEL_LIMITS.bottomPanel.min}
+              max={WORKBENCH_PANEL_LIMITS.bottomPanel.max}
               orientation="horizontal"
               edge="top"
               label="Resize Terminal panel"
               inverted
-              onResize={setBottomPanelSize}
+              onResize={(size) => setPanelSize("bottomPanel", size)}
             />
           }
         >
@@ -181,6 +200,7 @@ export function WorkbenchPreview() {
           <div><span>UTF-8</span><span>TypeScript</span><strong>✦ CodePilot ready</strong></div>
         </div>
       }
-    />
+      />
+    </>
   );
 }
