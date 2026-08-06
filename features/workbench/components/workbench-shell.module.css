@@ -1,0 +1,158 @@
+.shell {
+  display: grid;
+  grid-template-rows: var(--size-titlebar) minmax(0, 1fr) var(--size-statusbar);
+  width: 100%;
+  height: 100dvh;
+  min-width: 20rem;
+  overflow: hidden;
+  background: var(--surface-canvas);
+  color: var(--content-primary);
+  isolation: isolate;
+}
+
+.titlebar {
+  position: relative;
+  z-index: var(--z-panel);
+  min-width: 0;
+  border-bottom: var(--border-width) solid var(--border-default);
+  background: var(--surface-raised);
+}
+
+.workspace {
+  position: relative;
+  display: grid;
+  grid-template-columns:
+    var(--size-activity-rail)
+    var(--size-sidebar-default)
+    minmax(0, 1fr)
+    var(--size-assistant-default);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.shell[data-sidebar="false"] .workspace {
+  grid-template-columns:
+    var(--size-activity-rail)
+    minmax(0, 1fr)
+    var(--size-assistant-default);
+}
+
+.shell[data-assistant="false"] .workspace {
+  grid-template-columns:
+    var(--size-activity-rail)
+    var(--size-sidebar-default)
+    minmax(0, 1fr);
+}
+
+.shell[data-sidebar="false"][data-assistant="false"] .workspace {
+  grid-template-columns: var(--size-activity-rail) minmax(0, 1fr);
+}
+
+.activityRail,
+.sidebar,
+.centerStage,
+.editor,
+.assistant,
+.bottomPanel {
+  min-width: 0;
+  min-height: 0;
+}
+
+.activityRail {
+  border-right: var(--border-width) solid var(--border-default);
+  background: var(--surface-raised);
+}
+
+.sidebar {
+  overflow: auto;
+  border-right: var(--border-width) solid var(--border-default);
+  background: var(--surface-base);
+  contain: layout paint;
+}
+
+.centerStage {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) var(--size-bottom-panel-default);
+  overflow: hidden;
+  background: var(--surface-sunken);
+}
+
+.shell[data-bottom-panel="false"] .centerStage {
+  grid-template-rows: minmax(0, 1fr);
+}
+
+.editor {
+  overflow: hidden;
+  background: var(--surface-base);
+  contain: layout paint;
+}
+
+.bottomPanel {
+  overflow: auto;
+  border-top: var(--border-width) solid var(--border-default);
+  background: var(--surface-base);
+  contain: layout paint;
+}
+
+.assistant {
+  overflow: auto;
+  border-left: var(--border-width) solid var(--border-default);
+  background: var(--surface-raised);
+  contain: layout paint;
+}
+
+.statusbar {
+  position: relative;
+  z-index: var(--z-panel);
+  min-width: 0;
+  border-top: var(--border-width) solid color-mix(in srgb, var(--accent-primary) 35%, var(--border-default));
+  background: color-mix(in srgb, var(--surface-raised) 72%, var(--action-primary));
+}
+
+@media (max-width: 68rem) {
+  .workspace {
+    grid-template-columns:
+      var(--size-activity-rail)
+      minmax(var(--size-sidebar-min), 12.5rem)
+      minmax(0, 1fr)
+      minmax(var(--size-assistant-min), 18.75rem);
+  }
+}
+
+@media (max-width: 56rem) {
+  .workspace {
+    grid-template-columns:
+      var(--size-activity-rail)
+      minmax(var(--size-sidebar-min), 12rem)
+      minmax(0, 1fr);
+  }
+
+  .shell[data-sidebar="false"] .workspace {
+    grid-template-columns: var(--size-activity-rail) minmax(0, 1fr);
+  }
+
+  .assistant {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: var(--z-overlay);
+    width: min(var(--size-assistant-default), calc(100% - var(--size-activity-rail)));
+    box-shadow: var(--shadow-floating);
+  }
+}
+
+@media (max-width: 44rem) {
+  .workspace,
+  .shell[data-assistant="false"] .workspace,
+  .shell[data-sidebar="false"] .workspace {
+    grid-template-columns: var(--size-activity-rail) minmax(0, 1fr);
+  }
+
+  .sidebar {
+    position: absolute;
+    inset: 0 auto 0 var(--size-activity-rail);
+    z-index: var(--z-overlay);
+    width: min(var(--size-sidebar-default), calc(100% - var(--size-activity-rail)));
+    box-shadow: var(--shadow-floating);
+  }
+}
