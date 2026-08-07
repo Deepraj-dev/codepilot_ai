@@ -1,18 +1,26 @@
 "use client";
 
+import {
+  PanelBottomClose,
+  PanelBottomOpen,
+  PanelLeftClose,
+  PanelLeftOpen,
+  PanelRightClose,
+  PanelRightOpen,
+} from "lucide-react";
 import type { WorkspacePanelProps } from "../model/panel.types";
 import styles from "./workspace-panel.module.css";
 
-const collapseGlyph = {
-  start: "‹",
-  end: "›",
-  bottom: "⌄",
+const collapseIcon = {
+  start: PanelLeftClose,
+  end: PanelRightClose,
+  bottom: PanelBottomClose,
 } as const;
 
-const expandGlyph = {
-  start: "›",
-  end: "‹",
-  bottom: "⌃",
+const expandIcon = {
+  start: PanelLeftOpen,
+  end: PanelRightOpen,
+  bottom: PanelBottomOpen,
 } as const;
 
 export function WorkspacePanel({
@@ -33,6 +41,8 @@ export function WorkspacePanel({
   const contentId = `${id}-content`;
   const panelClassName = [styles.panel, className].filter(Boolean).join(" ");
   const contentClasses = [styles.content, contentClassName].filter(Boolean).join(" ");
+  const CollapseIcon = collapseIcon[collapseDirection];
+  const ExpandIcon = expandIcon[collapseDirection];
 
   if (collapsed) {
     return (
@@ -49,7 +59,7 @@ export function WorkspacePanel({
           aria-controls={contentId}
           onClick={() => onCollapsedChange?.(false)}
         >
-          <span aria-hidden="true">{expandGlyph[collapseDirection]}</span>
+          <ExpandIcon size={15} strokeWidth={1.7} aria-hidden="true" />
           <strong>{title}</strong>
         </button>
       </section>
@@ -74,7 +84,7 @@ export function WorkspacePanel({
               aria-label={`Collapse ${title}`}
               onClick={() => onCollapsedChange?.(true)}
             >
-              <span aria-hidden="true">{collapseGlyph[collapseDirection]}</span>
+              <CollapseIcon size={15} strokeWidth={1.7} aria-hidden="true" />
             </button>
           ) : null}
         </div>

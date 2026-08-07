@@ -1,6 +1,17 @@
 "use client";
 
+import {
+  CircleX,
+  Code2,
+  GitBranch,
+  RotateCcw,
+  Search,
+  Sparkles,
+  TriangleAlert,
+} from "lucide-react";
+import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { FileExplorer } from "@/features/file-explorer";
 import {
   ActivityRail,
   WorkbenchStateHydrator,
@@ -12,6 +23,7 @@ import {
   workbenchActivityItems,
   workbenchUtilityItems,
 } from "@/features/workbench";
+import { defaultExpandedFileIds, workbenchPreviewTree } from "../_data/workbench-preview-tree";
 import styles from "../page.module.css";
 
 function RegionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
@@ -24,6 +36,7 @@ function RegionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
 }
 
 export function WorkbenchPreview() {
+  const [activeFileName, setActiveFileName] = useState("workbench-shell.tsx");
   const {
     activeActivityId,
     sidebarCollapsed,
@@ -67,11 +80,11 @@ export function WorkbenchPreview() {
       titlebar={
         <div className={styles.titlebarContent}>
           <div className={styles.brand}>
-            <span className={styles.brandMark} aria-hidden="true" />
+            <Sparkles className={styles.brandMark} size={17} strokeWidth={1.8} aria-hidden="true" />
             <strong>CodePilot</strong>
           </div>
           <button className={styles.commandCenter} type="button">
-            <span>⌕</span>
+            <Search size={14} strokeWidth={1.8} aria-hidden="true" />
             <span>Search files, commands, and symbols</span>
             <kbd>⌘ K</kbd>
           </button>
@@ -80,7 +93,8 @@ export function WorkbenchPreview() {
             Workspace ready
           </div>
           <button className={styles.resetLayoutButton} type="button" onClick={resetLayout}>
-            Reset layout
+            <RotateCcw size={12} aria-hidden="true" />
+            <span>Reset layout</span>
           </button>
         </div>
       }
@@ -101,6 +115,7 @@ export function WorkbenchPreview() {
           collapsed={sidebarCollapsed}
           collapseDirection="start"
           onCollapsedChange={(collapsed) => setPanelCollapsed("sidebar", collapsed)}
+          contentClassName={styles.explorerPanelContent}
           resizeHandle={
             <PanelResizeHandle
               value={sidebarSize}
@@ -113,24 +128,30 @@ export function WorkbenchPreview() {
             />
           }
         >
-          <div className={styles.placeholderTree} aria-hidden="true">
-            <span className={styles.treeLong} />
-            <span className={styles.treeMedium} />
-            <span className={styles.treeShort} />
-            <span className={styles.treeMedium} />
-            <span className={styles.treeLong} />
-          </div>
+          <FileExplorer
+            projectName="codepilot_ai"
+            nodes={workbenchPreviewTree}
+            defaultExpandedIds={defaultExpandedFileIds}
+            defaultSelectedId="app/page.tsx"
+            onFileOpen={(node) => setActiveFileName(node.name)}
+            onCreate={(node) => {
+              if (node.kind === "file") setActiveFileName(node.name);
+            }}
+            onRename={(node, nextName) => {
+              setActiveFileName((current) => current === node.name ? nextName : current);
+            }}
+          />
         </WorkspacePanel>
       }
       editor={
         <div className={styles.editorPlaceholder}>
           <div className={styles.editorTabs}>
-            <span className={styles.editorTabActive}>workbench-shell.tsx</span>
+            <span className={styles.editorTabActive}>{activeFileName}</span>
             <span>workspace-panel.tsx</span>
           </div>
           <div className={styles.editorCanvas}>
             <div className={styles.editorIntro}>
-              <span className={styles.editorSymbol} aria-hidden="true">⌘</span>
+              <span className={styles.editorSymbol} aria-hidden="true"><Code2 size={18} strokeWidth={1.7} /></span>
               <RegionLabel eyebrow="Primary content" title="Editor slot" />
               <p>Drag panel edges or use the keyboard while a resize handle is focused.</p>
             </div>
@@ -196,8 +217,16 @@ export function WorkbenchPreview() {
       }
       statusbar={
         <div className={styles.statusbarContent}>
-          <div><span>⑂ main</span><span>ⓧ 0</span><span>△ 0</span></div>
-          <div><span>UTF-8</span><span>TypeScript</span><strong>✦ CodePilot ready</strong></div>
+          <div>
+            <span><GitBranch size={11} aria-hidden="true" /> main</span>
+            <span><CircleX size={11} aria-hidden="true" /> 0</span>
+            <span><TriangleAlert size={11} aria-hidden="true" /> 0</span>
+          </div>
+          <div>
+            <span>UTF-8</span>
+            <span>TypeScript</span>
+            <strong><Sparkles size={11} aria-hidden="true" /> CodePilot ready</strong>
+          </div>
         </div>
       }
       />

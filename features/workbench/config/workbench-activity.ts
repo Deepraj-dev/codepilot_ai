@@ -1,10 +1,20 @@
+import {
+  Blocks,
+  BugPlay,
+  CircleUserRound,
+  Files,
+  GitBranch,
+  Search,
+  Settings,
+  Sparkles,
+} from "lucide-react";
 import type { ActivityRailItem } from "../model/activity-rail.types";
 
 export const workbenchActivityItems = [
   {
     id: "explorer",
     label: "Explorer",
-    icon: "◇",
+    icon: Files,
     shortcut: "⇧⌘E",
     controls: "explorer-panel-content",
     revealsPanel: "sidebar",
@@ -12,32 +22,32 @@ export const workbenchActivityItems = [
   {
     id: "search",
     label: "Search",
-    icon: "⌕",
+    icon: Search,
     shortcut: "⇧⌘F",
   },
   {
     id: "source-control",
     label: "Source control",
-    icon: "⑂",
+    icon: GitBranch,
     badge: 3,
     shortcut: "⌃⇧G",
   },
   {
     id: "run",
     label: "Run and debug",
-    icon: "▷",
+    icon: BugPlay,
     shortcut: "⇧⌘D",
   },
   {
     id: "extensions",
     label: "Extensions",
-    icon: "▦",
+    icon: Blocks,
     shortcut: "⇧⌘X",
   },
   {
     id: "agent",
     label: "CodePilot agent",
-    icon: "✦",
+    icon: Sparkles,
     shortcut: "⌘L",
     controls: "assistant-panel-content",
     revealsPanel: "assistant",
@@ -48,13 +58,13 @@ export const workbenchUtilityItems = [
   {
     id: "accounts",
     label: "Accounts",
-    icon: "◎",
+    icon: CircleUserRound,
     kind: "action",
   },
   {
     id: "settings",
     label: "Manage settings",
-    icon: "⚙",
+    icon: Settings,
     kind: "action",
     shortcut: "⌘,",
   },

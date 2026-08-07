@@ -1,10 +1,10 @@
-import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 import type { WorkbenchPanelId } from "./workbench.types";
 
 export type ActivityRailItem = {
   id: string;
   label: string;
-  icon: ReactNode;
+  icon: LucideIcon;
   kind?: "view" | "action";
   badge?: number | string;
   shortcut?: string;

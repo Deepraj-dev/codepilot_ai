@@ -44,6 +44,7 @@ export function ActivityRail({
   }
 
   function renderItem(item: ActivityRailItem) {
+    const Icon = item.icon;
     const active = item.kind !== "action" && item.id === activeItemId;
     const tooltipId = `activity-${item.id}-tooltip`;
     const tabbable = item.id === activeItemId || (!activeItemId && item.id === fallbackTabStop);
@@ -71,7 +72,9 @@ export function ActivityRail({
         onKeyDown={(event) => handleKeyDown(event, item.id)}
       >
         <span className={styles.activeIndicator} aria-hidden="true" />
-        <span className={styles.icon} aria-hidden="true">{item.icon}</span>
+        <span className={styles.icon} aria-hidden="true">
+          <Icon size={20} strokeWidth={1.7} />
+        </span>
         {item.badge !== undefined ? <span className={styles.badge} aria-hidden="true">{item.badge}</span> : null}
         <span id={tooltipId} className={styles.tooltip} role="tooltip">
           <span>{item.label}</span>

@@ -9,6 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@iconify-icons/vscode-icons": "^1.2.29",
+    "@iconify/react": "^6.0.2",
+    "lucide-react": "^1.29.0",
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
