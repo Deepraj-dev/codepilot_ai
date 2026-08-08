@@ -9,8 +9,8 @@ import {
   Sparkles,
   TriangleAlert,
 } from "lucide-react";
-import { useState } from "react";
 import { useShallow } from "zustand/react/shallow";
+import { EditorTabs, useEditorStore } from "@/features/editor";
 import { FileExplorer } from "@/features/file-explorer";
 import {
   ActivityRail,
@@ -36,7 +36,24 @@ function RegionLabel({ eyebrow, title }: { eyebrow: string; title: string }) {
 }
 
 export function WorkbenchPreview() {
-  const [activeFileName, setActiveFileName] = useState("workbench-shell.tsx");
+  const {
+    editorTabs,
+    activeEditorTabId,
+    openDocument,
+    selectEditorTab,
+    closeEditorTab,
+    renameDocument,
+  } = useEditorStore(
+    useShallow((state) => ({
+      editorTabs: state.tabs,
+      activeEditorTabId: state.activeTabId,
+      openDocument: state.openDocument,
+      selectEditorTab: state.selectTab,
+      closeEditorTab: state.closeTab,
+      renameDocument: state.renameDocument,
+    })),
+  );
+  const activeEditorTab = editorTabs.find((tab) => tab.id === activeEditorTabId);
   const {
     activeActivityId,
     sidebarCollapsed,
@@ -133,27 +150,42 @@ export function WorkbenchPreview() {
             nodes={workbenchPreviewTree}
             defaultExpandedIds={defaultExpandedFileIds}
             defaultSelectedId="app/page.tsx"
-            onFileOpen={(node) => setActiveFileName(node.name)}
+            onFileOpen={(node) => openDocument({
+              id: node.id,
+              name: node.name,
+              path: node.path,
+              readonly: node.readonly,
+            })}
             onCreate={(node) => {
-              if (node.kind === "file") setActiveFileName(node.name);
+              if (node.kind === "file") openDocument({ id: node.id, name: node.name, path: node.path });
             }}
             onRename={(node, nextName) => {
-              setActiveFileName((current) => current === node.name ? nextName : current);
+              renameDocument(node.id, nextName);
             }}
           />
         </WorkspacePanel>
       }
       editor={
         <div className={styles.editorPlaceholder}>
-          <div className={styles.editorTabs}>
-            <span className={styles.editorTabActive}>{activeFileName}</span>
-            <span>workspace-panel.tsx</span>
-          </div>
-          <div className={styles.editorCanvas}>
+          <EditorTabs
+            tabs={editorTabs}
+            activeTabId={activeEditorTabId}
+            onTabSelect={selectEditorTab}
+            onTabClose={closeEditorTab}
+          />
+          <div
+            className={styles.editorCanvas}
+            id="editor-document-surface"
+            role="tabpanel"
+            aria-labelledby={activeEditorTabId ? `editor-tab-${activeEditorTabId}` : undefined}
+          >
             <div className={styles.editorIntro}>
               <span className={styles.editorSymbol} aria-hidden="true"><Code2 size={18} strokeWidth={1.7} /></span>
-              <RegionLabel eyebrow="Primary content" title="Editor slot" />
-              <p>Drag panel edges or use the keyboard while a resize handle is focused.</p>
+              <RegionLabel
+                eyebrow={activeEditorTab ? "Editor ready" : "No open editors"}
+                title={activeEditorTab?.name ?? "Open a file from Explorer"}
+              />
+              <p>{activeEditorTab?.path ?? "The Monaco editor surface will appear here next."}</p>
             </div>
           </div>
         </div>
